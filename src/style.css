@@ -1,3 +1,11 @@
 .navbar {
     -fx-background-color: #200f45;
 }
+
+.day-box {
+    -fx-border-color: #666464;
+    -fx-border-width: 1;
+    -fx-border-style: solid;
+    -fx-padding: 5px;
+    -fx-background-color: #f9f9f9;
+}

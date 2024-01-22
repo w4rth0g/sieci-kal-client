@@ -3,7 +3,9 @@ package main.client.controllers;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import main.client.CalendarApp;
 import main.client.UserInfo;
 import main.client.communication.CommLogout;
@@ -11,8 +13,8 @@ import main.client.components.DayBox;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.util.Locale;
 import java.time.format.TextStyle;
+import java.util.Locale;
 
 public class CalendarController {
 
@@ -66,13 +68,38 @@ public class CalendarController {
 
     private void updateCalendar() {
         calendarGrid.getChildren().clear();
+        calendarGrid.getColumnConstraints().clear();
         YearMonth yearMonth = YearMonth.from(currentDate);
         monthLabel.setText(yearMonth.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()) + " " + yearMonth.getYear());
 
-        for (int i = 1; i <= yearMonth.lengthOfMonth(); i++) {
-            LocalDate date = yearMonth.atDay(i);
-            DayBox dayBox = new DayBox(i, false, "");
-            calendarGrid.add(dayBox, (date.getDayOfWeek().getValue() - 1) % 7, (i - 1) / 7);
+        String[] dayNames = {"Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek", "Sobota", "Niedziela"};
+
+        for (int i = 0; i < 7; i++) {
+            ColumnConstraints columnConstraints = new ColumnConstraints();
+            columnConstraints.setMinWidth(30);
+            columnConstraints.setPrefWidth(70);
+            columnConstraints.setMaxWidth(70);
+            calendarGrid.getColumnConstraints().add(columnConstraints);
+        }
+
+        for (int i = 0; i < 7; i++) {
+            Label dayNameLabel = new Label(dayNames[i]);
+            dayNameLabel.getStyleClass().add("day-name-label");
+            calendarGrid.add(dayNameLabel, i, 0);
+        }
+
+        LocalDate firstOfMonth = currentDate.withDayOfMonth(1);
+        int dayOfWeekOfFirstOfMonth = firstOfMonth.getDayOfWeek().getValue();
+
+        int offset = (dayOfWeekOfFirstOfMonth - 1 + 7) % 7;
+
+        for (int dayOfMonth = 1; dayOfMonth <= yearMonth.lengthOfMonth(); dayOfMonth++) {
+            LocalDate date = yearMonth.atDay(dayOfMonth);
+            DayBox dayBox = new DayBox(dayOfMonth, false, "");
+            int column = (dayOfMonth + offset - 1) % 7;
+            int row = (dayOfMonth + offset - 1) / 7 + 1;
+            calendarGrid.add(dayBox, column, row);
         }
     }
+
 }

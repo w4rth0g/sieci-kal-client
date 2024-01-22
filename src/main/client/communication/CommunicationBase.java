@@ -8,8 +8,8 @@ import java.net.Socket;
 
 public class CommunicationBase {
 
-    private String hostname = "172.27.226.250"; // Adres serwera
-    private int port = 1234; // Port serwera
+    protected String hostname = "172.27.226.250"; // Adres serwera
+    protected int port = 1234; // Port serwera
     protected String resp = null;
 
     public String sendAndGetResp() {

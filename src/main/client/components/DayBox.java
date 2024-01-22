@@ -12,6 +12,7 @@ public class DayBox extends VBox {
     public DayBox(int day, boolean hasEvent, String eventTitle) {
         super(5); // 5 is the spacing between children in VBox
         this.dayLabel = new Label(Integer.toString(day));
+        this.getStylesheets().add("/style.css");
         this.dayLabel.getStyleClass().add("day-label");
 
         if (hasEvent) {
