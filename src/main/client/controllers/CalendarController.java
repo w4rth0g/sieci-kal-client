@@ -6,6 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.RowConstraints;
 import main.client.CalendarApp;
 import main.client.UserInfo;
 import main.client.communication.CommGetEvents;
@@ -16,6 +17,8 @@ import main.client.model.Event;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.TextStyle;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class CalendarController {
@@ -71,6 +74,7 @@ public class CalendarController {
     private void updateCalendar() {
         calendarGrid.getChildren().clear();
         calendarGrid.getColumnConstraints().clear();
+        calendarGrid.getRowConstraints().clear();
         YearMonth yearMonth = YearMonth.from(currentDate);
         monthLabel.setText(yearMonth.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()) + " " + yearMonth.getYear());
 
@@ -93,6 +97,14 @@ public class CalendarController {
         }
 
         for (int i = 0; i < 7; i++) {
+            RowConstraints rowConstraints = new RowConstraints();
+            rowConstraints.setMinHeight(70);
+            rowConstraints.setPrefHeight(70);
+            rowConstraints.setMaxHeight(70);
+            calendarGrid.getRowConstraints().add(rowConstraints);
+        }
+
+        for (int i = 0; i < 7; i++) {
             Label dayNameLabel = new Label(dayNames[i]);
             dayNameLabel.getStyleClass().add("day-name-label");
             calendarGrid.add(dayNameLabel, i, 0);
@@ -105,12 +117,16 @@ public class CalendarController {
 
         for (int dayOfMonth = 1; dayOfMonth <= yearMonth.lengthOfMonth(); dayOfMonth++) {
             LocalDate date = yearMonth.atDay(dayOfMonth);
-            DayBox dayBox = new DayBox(dayOfMonth, false, "");
+
+            int evtCount = 0;
+            List<Event> eventsForDay = new ArrayList<>();
             for (Event e : commGetEvents.getEventList()) {
                 if (date.equals(e.getStartTime().toLocalDateTime().toLocalDate())) {
-                    dayBox = new DayBox(dayOfMonth, true, e.getTitle());
+                    evtCount++;
+                    eventsForDay.add(e);
                 }
             }
+            DayBox dayBox = new DayBox(dayOfMonth, evtCount, date, eventsForDay);
             int column = (dayOfMonth + offset - 1) % 7;
             int row = (dayOfMonth + offset - 1) / 7 + 1;
             calendarGrid.add(dayBox, column, row);
