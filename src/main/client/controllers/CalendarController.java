@@ -8,8 +8,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import main.client.CalendarApp;
 import main.client.UserInfo;
+import main.client.communication.CommGetEvents;
 import main.client.communication.CommLogout;
 import main.client.components.DayBox;
+import main.client.model.Event;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -73,6 +75,14 @@ public class CalendarController {
         monthLabel.setText(yearMonth.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()) + " " + yearMonth.getYear());
 
         String[] dayNames = {"Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek", "Sobota", "Niedziela"};
+        CommGetEvents commGetEvents = new CommGetEvents();
+
+        try {
+            commGetEvents.sendAndGetResp();
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         for (int i = 0; i < 7; i++) {
             ColumnConstraints columnConstraints = new ColumnConstraints();
@@ -96,6 +106,11 @@ public class CalendarController {
         for (int dayOfMonth = 1; dayOfMonth <= yearMonth.lengthOfMonth(); dayOfMonth++) {
             LocalDate date = yearMonth.atDay(dayOfMonth);
             DayBox dayBox = new DayBox(dayOfMonth, false, "");
+            for (Event e : commGetEvents.getEventList()) {
+                if (date.equals(e.getStartTime().toLocalDateTime().toLocalDate())) {
+                    dayBox = new DayBox(dayOfMonth, true, e.getTitle());
+                }
+            }
             int column = (dayOfMonth + offset - 1) % 7;
             int row = (dayOfMonth + offset - 1) / 7 + 1;
             calendarGrid.add(dayBox, column, row);

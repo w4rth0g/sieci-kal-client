@@ -34,6 +34,7 @@ public class LoginController {
                 CalendarApp.showCalendarScene();
             } catch (Exception e) {
                 messageLabel.setText(e.getMessage());
+                throw new RuntimeException(e);
             }
         } else {
             messageLabel.setText("Wystąpił nieznany błąd aplikacji.");
