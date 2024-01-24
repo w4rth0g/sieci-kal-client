@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import main.client.UserInfo;
 import main.client.communication.CommAddEvent;
 import main.client.communication.CommDeleteEvent;
+import main.client.communication.CommGetUser;
 import main.client.controllers.CalendarController;
 import main.client.model.Event;
 
@@ -115,9 +116,25 @@ public class DayBox extends VBox {
             VBox evtBox = new VBox(3);
             evtBox.setPadding(new Insets(10));
             evtBox.getStyleClass().add("evt-box");
-            Label author = new Label("User z id: " + evt.getUserId());
-            Label title = new Label(evt.getTitle());
-            Label desc = new Label(evt.getDescription());
+            Label title = new Label(evt.getTitle().replace("_", " "));
+            Label desc = new Label(evt.getDescription().replace("_", " "));
+            Label author = new Label("Nieznany użytkownik");
+
+            if (evt.getUserId() == UserInfo.getUserId()) {
+                 author = new Label(UserInfo.getUsername());
+            } else {
+                try {
+                    CommGetUser commGetUser = new CommGetUser(evt.getUserId());
+                    commGetUser.sendAndGetResp();
+                    commGetUser.parseResponse();
+
+                    author = new Label(commGetUser.getUsername());
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            author.setFont(Font.font(16));
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
             Label timeL = new Label(
@@ -192,7 +209,7 @@ public class DayBox extends VBox {
         endMinuteSpinner.setEditable(true);
         HBox endTimeBox = new HBox(5, endHourSpinner, new Label(":"), endMinuteSpinner);
 
-        Button submitButton = new Button("Submit");
+        Button submitButton = new Button("Zapisz");
         submitButton.setOnAction(e -> handleSubmit(titleInput.getText(), descriptionInput.getText(),
                 startHourSpinner.getValue(), startMinuteSpinner.getValue(),
                 endHourSpinner.getValue(), endMinuteSpinner.getValue()));

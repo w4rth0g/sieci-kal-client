@@ -16,7 +16,7 @@
     </Label>
     <TextField fx:id="usernameField" promptText="Username" maxWidth="300" />
     <PasswordField fx:id="passwordField" promptText="Password" maxWidth="300" />
-    <Button onAction="#handleSubmit" text="Submit" />
+    <Button onAction="#handleSubmit" text="Zaloguj" />
     <Label fx:id="messageLabel" textFill="red" />
     <padding>
         <Insets bottom="20.0" left="70.0" right="70.0" top="20.0" />

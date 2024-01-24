@@ -38,11 +38,16 @@ public class CalendarController {
     @FXML
     private Button logoutButton;
 
+    @FXML
+    private Label userLabel;
+
     private LocalDate currentDate;
 
     @FXML
     public void initialize() {
         currentDate = LocalDate.now();
+        userLabel.setText(UserInfo.getUsername());
+
         updateCalendar();
 
         previousMonthButton.setOnAction(e -> {

@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import main.client.communication.CommLogout;
 
 import java.util.Objects;
 
@@ -32,6 +33,20 @@ public class CalendarApp extends Application {
         Parent root = FXMLLoader.load(Objects.requireNonNull(CalendarApp.class.getResource("/calendar_layout.fxml")));
         primaryStage.setScene(new Scene(root));
         primaryStage.setTitle("Online Calendar");
+        primaryStage.setOnCloseRequest(e -> {
+            CommLogout commLogout = new CommLogout();
+            String resp = commLogout.sendAndGetResp();
+
+            if (resp != null) {
+                try {
+                    commLogout.parseResponse();
+                    UserInfo.setToken(null);
+                    CalendarApp.showLoginScene();
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
     }
 
     public static void main(String[] args) {

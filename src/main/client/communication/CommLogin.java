@@ -2,6 +2,10 @@ package main.client.communication;
 
 public class CommLogin extends CommunicationBase{
 
+    public String getUsername() {
+        return username;
+    }
+
     private final String username;
     private final String password;
 

@@ -32,6 +32,7 @@ public class LoginController {
                 commLogin.parseResponse();
                 UserInfo.setToken(commLogin.getLoginToken());
                 UserInfo.setUserId(commLogin.getUserId());
+                UserInfo.setUsername(commLogin.getUsername());
                 CalendarApp.showCalendarScene();
             } catch (Exception e) {
                 messageLabel.setText(e.getMessage());
