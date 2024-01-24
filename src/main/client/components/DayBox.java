@@ -1,5 +1,6 @@
 package main.client.components;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
@@ -12,6 +13,7 @@ import javafx.stage.Stage;
 import main.client.model.Event;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class DayBox extends VBox {
@@ -62,14 +64,14 @@ public class DayBox extends VBox {
         this.setOnMouseEntered(e -> {
             this.setCursor(Cursor.HAND);
             this.getStyleClass().add("day-box-entered");
-            this.dayLabel.getStyleClass().add("day-box-entered");
-            eventDotsContainer.getChildren().forEach(ch -> ch.getStyleClass().add("day-box-entered"));
+            this.dayLabel.getStyleClass().add("text-white");
+            eventDotsContainer.getChildren().forEach(ch -> ch.getStyleClass().add("text-white"));
         });
         this.setOnMouseExited(e -> {
             this.setCursor(Cursor.DEFAULT);
             this.getStyleClass().remove("day-box-entered");
-            this.dayLabel.getStyleClass().remove("day-box-entered");
-            eventDotsContainer.getChildren().forEach(ch -> ch.getStyleClass().remove("day-box-entered"));
+            this.dayLabel.getStyleClass().remove("text-white");
+            eventDotsContainer.getChildren().forEach(ch -> ch.getStyleClass().remove("text-white"));
         });
 
         this.getStyleClass().add("day-box");
@@ -81,32 +83,46 @@ public class DayBox extends VBox {
 
     private void showModal() {
         Stage modalStage = new Stage();
-        modalStage.initModality(Modality.APPLICATION_MODAL); // Set the window as a modal dialog
+        modalStage.initModality(Modality.APPLICATION_MODAL);
         modalStage.setTitle("Szczegóły " + date);
 
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setFitToWidth(true);
+        scrollPane.setPadding(new Insets(20));
+        scrollPane.getStylesheets().add("/style.css");
 
-        // Layout for modal content
         BorderPane modalLayout = new BorderPane();
         scrollPane.setContent(modalLayout);
 
-        // Date label
         Label dateLabel = new Label(date.toString());
+        dateLabel.setAlignment(Pos.CENTER);
         modalLayout.setTop(dateLabel);
 
-        // Event boxes container
-        VBox eventBoxes = new VBox(5);
-        // ... Add your event boxes here
+        VBox eventBoxes = new VBox(10);
+        eventBoxes.setPadding(new Insets(20, 0, 20, 0));
+        for (Event evt : this.eventsForDay) {
+            VBox evtBox = new VBox(3);
+            evtBox.setPadding(new Insets(10));
+            evtBox.getStyleClass().add("evt-box");
+            Label author = new Label("User z id: " + evt.getUserId());
+            Label title = new Label(evt.getTitle());
+            Label desc = new Label(evt.getDescription());
 
-        // Hours on the right side
-        VBox hoursList = new VBox(5);
-        for (int hour = 0; hour < 24; hour++) {
-            Label hourLabel = new Label(String.format("%02d:00", hour));
-            hoursList.getChildren().add(hourLabel);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+            Label timeL = new Label(
+                    evt.getStartTime().toLocalDateTime().toLocalTime().format(formatter) + " - "
+                    + evt.getEndTime().toLocalDateTime().toLocalTime().format(formatter)
+            );
+
+            author.getStyleClass().add("text-white");
+            title.getStyleClass().add("text-white");
+            desc.getStyleClass().add("text-white");
+            timeL.getStyleClass().add("text-white");
+
+            evtBox.getChildren().addAll(author, timeL, title, desc);
+            eventBoxes.getChildren().add(evtBox);
         }
 
-        // Close button
         HBox bottomSection = new HBox();
 
         Region spacer = new Region();
@@ -115,17 +131,13 @@ public class DayBox extends VBox {
         Button closeButton = new Button("Close");
         closeButton.setOnAction(e -> modalStage.close());
         bottomSection.getChildren().addAll(closeButton, spacer, this.addButton);
+
         modalLayout.setBottom(bottomSection);
-
-        // Set the main content and hours list to the modal layout
         modalLayout.setCenter(eventBoxes);
-        modalLayout.setRight(hoursList);
 
-        // Create a scene with the layout
-        Scene modalScene = new Scene(scrollPane, 300, 400); // Adjust the size as needed
+        Scene modalScene = new Scene(scrollPane, 300, 400);
         modalStage.setScene(modalScene);
-        modalStage.showAndWait(); // Show the modal and wait for it to be closed
+        modalStage.showAndWait();
     }
 
-    // Additional methods for updating the DayBox, handling events, etc.
 }

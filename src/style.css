@@ -12,9 +12,16 @@
 
 .day-box-entered {
     -fx-background-color: #200f45;
+}
+
+.text-white {
     -fx-text-fill: white;
 }
 
 .event-dot {
     -fx-font-size: 20px;
+}
+
+.evt-box {
+    -fx-background-color: #200f45;
 }
