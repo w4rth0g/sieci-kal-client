@@ -71,7 +71,7 @@ public class CalendarController {
         });
     }
 
-    private void updateCalendar() {
+    public void updateCalendar() {
         calendarGrid.getChildren().clear();
         calendarGrid.getColumnConstraints().clear();
         calendarGrid.getRowConstraints().clear();
@@ -90,7 +90,7 @@ public class CalendarController {
 
         for (int i = 0; i < 7; i++) {
             ColumnConstraints columnConstraints = new ColumnConstraints();
-            columnConstraints.setMinWidth(30);
+            columnConstraints.setMinWidth(45);
             columnConstraints.setPrefWidth(70);
             columnConstraints.setMaxWidth(70);
             calendarGrid.getColumnConstraints().add(columnConstraints);
@@ -126,7 +126,7 @@ public class CalendarController {
                     eventsForDay.add(e);
                 }
             }
-            DayBox dayBox = new DayBox(dayOfMonth, evtCount, date, eventsForDay);
+            DayBox dayBox = new DayBox(this, dayOfMonth, evtCount, date, eventsForDay);
             int column = (dayOfMonth + offset - 1) % 7;
             int row = (dayOfMonth + offset - 1) / 7 + 1;
             calendarGrid.add(dayBox, column, row);

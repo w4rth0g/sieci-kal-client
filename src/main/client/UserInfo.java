@@ -10,4 +10,14 @@ public class UserInfo {
     }
 
     private static String token = null;
+
+    public static String getUserId() {
+        return userId;
+    }
+
+    public static void setUserId(String userId) {
+        UserInfo.userId = userId;
+    }
+
+    private static String userId = null;
 }
