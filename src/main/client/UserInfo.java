@@ -11,13 +11,13 @@ public class UserInfo {
 
     private static String token = null;
 
-    public static String getUserId() {
+    public static int getUserId() {
         return userId;
     }
 
-    public static void setUserId(String userId) {
+    public static void setUserId(int userId) {
         UserInfo.userId = userId;
     }
 
-    private static String userId = null;
+    private static int userId = -1;
 }

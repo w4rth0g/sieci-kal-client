@@ -9,7 +9,9 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import main.client.UserInfo;
 import main.client.communication.CommAddEvent;
+import main.client.communication.CommDeleteEvent;
 import main.client.controllers.CalendarController;
 import main.client.model.Event;
 
@@ -129,6 +131,25 @@ public class DayBox extends VBox {
             timeL.getStyleClass().add("text-white");
 
             evtBox.getChildren().addAll(author, timeL, title, desc);
+
+            if (evt.getUserId() == UserInfo.getUserId()) {
+                Button delButton = new Button("Usuń");
+
+                delButton.setOnAction(e -> {
+                    CommDeleteEvent commDeleteEvent = new CommDeleteEvent(evt.getEventId());
+                    commDeleteEvent.sendAndGetResp();
+                    try {
+                        commDeleteEvent.parseResponse();
+                    } catch (Exception ex) {
+                        throw new RuntimeException(ex);
+                    }
+
+                    refreshEventsDisplay();
+                });
+
+                evtBox.getChildren().add(delButton);
+            }
+
             eventBoxes.getChildren().add(evtBox);
         }
 

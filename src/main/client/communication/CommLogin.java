@@ -11,11 +11,11 @@ public class CommLogin extends CommunicationBase{
 
     private String loginToken;
 
-    public String getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    private String userId;
+    private int userId;
 
     public CommLogin(String username, String password) {
         this.username = username;
@@ -36,6 +36,6 @@ public class CommLogin extends CommunicationBase{
         }
 
         this.loginToken = respPrated[1];
-        this.userId = respPrated[2];
+        this.userId = Integer.parseInt(respPrated[2]);
     }
 }
