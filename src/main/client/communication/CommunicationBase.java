@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+// klasa sluzaca do komunikacji z serwerem. kolejne klasy dziedzicza po niej ustalajac swoje zadania i swoje metody
+// parsowania odpowiedzi serwera
 public class CommunicationBase {
 
     protected String hostname = "172.27.226.250"; // Adres serwera

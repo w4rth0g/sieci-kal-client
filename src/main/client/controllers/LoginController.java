@@ -8,6 +8,8 @@ import main.client.CalendarApp;
 import main.client.UserInfo;
 import main.client.communication.CommLogin;
 
+// kontroller odpowiedzialny za widok logowania uzytkownika
+// layout z pliku FXML
 public class LoginController {
 
     @FXML
@@ -27,6 +29,8 @@ public class LoginController {
         CommLogin commLogin = new CommLogin(username, password);
         String resp = commLogin.sendAndGetResp();
 
+
+        // wysylanie zadania o zalogowanie uzytkownika
         if (resp != null) {
             try {
                 commLogin.parseResponse();

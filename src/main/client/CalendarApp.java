@@ -9,6 +9,7 @@ import main.client.communication.CommLogout;
 
 import java.util.Objects;
 
+// klasa glowna aplikacji
 public class CalendarApp extends Application {
 
     private static Stage primaryStage;
@@ -20,6 +21,7 @@ public class CalendarApp extends Application {
         primaryStage.show();
     }
 
+    // inicjalizajca scen login i kalendarz
     public static void showLoginScene() throws Exception {
         Parent root = FXMLLoader.load(Objects.requireNonNull(CalendarApp.class.getResource("/login_layout.fxml")));
         primaryStage.setMinWidth(300.0);
@@ -33,6 +35,8 @@ public class CalendarApp extends Application {
         Parent root = FXMLLoader.load(Objects.requireNonNull(CalendarApp.class.getResource("/calendar_layout.fxml")));
         primaryStage.setScene(new Scene(root));
         primaryStage.setTitle("Online Calendar");
+
+        // wylogowanie uzytkownika przy zamknieciu okna
         primaryStage.setOnCloseRequest(e -> {
             CommLogout commLogout = new CommLogout();
             String resp = commLogout.sendAndGetResp();

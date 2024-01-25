@@ -2,6 +2,7 @@ package main.client.model;
 
 import java.sql.Timestamp;
 
+// klasa modelu dla wydarzenia
 public class Event {
 
     private int eventId;

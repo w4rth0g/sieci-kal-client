@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+// kontroller odpowiedzialny za widok kalendarza
+// layout przygotowany w pliku FXML
 public class CalendarController {
 
     @FXML
@@ -50,6 +52,7 @@ public class CalendarController {
 
         updateCalendar();
 
+        // dodanie akcji dla przyciskow miesiecy
         previousMonthButton.setOnAction(e -> {
             currentDate = currentDate.minusMonths(1);
             updateCalendar();
@@ -60,6 +63,7 @@ public class CalendarController {
             updateCalendar();
         });
 
+        // przycisk do wylogowania uzytkownika
         logoutButton.setOnAction(e -> {
             CommLogout commLogout = new CommLogout();
             String resp = commLogout.sendAndGetResp();
@@ -77,15 +81,18 @@ public class CalendarController {
     }
 
     public void updateCalendar() {
+        // metoda sluzaca aktualizacji siatki kalendarza
         calendarGrid.getChildren().clear();
         calendarGrid.getColumnConstraints().clear();
         calendarGrid.getRowConstraints().clear();
         YearMonth yearMonth = YearMonth.from(currentDate);
         monthLabel.setText(yearMonth.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()) + " " + yearMonth.getYear());
 
+        // dni tygodnia
         String[] dayNames = {"Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek", "Sobota", "Niedziela"};
         CommGetEvents commGetEvents = new CommGetEvents();
 
+        // pobranie informacji o wydarzeniach
         try {
             commGetEvents.sendAndGetResp();
         }
@@ -93,6 +100,7 @@ public class CalendarController {
             throw new RuntimeException(e);
         }
 
+        // dodanie constraints w celu zapewnienia odpowiedniego rozmiaru kolumn i wierszy
         for (int i = 0; i < 7; i++) {
             ColumnConstraints columnConstraints = new ColumnConstraints();
             columnConstraints.setMinWidth(45);
@@ -109,6 +117,7 @@ public class CalendarController {
             calendarGrid.getRowConstraints().add(rowConstraints);
         }
 
+        // wyswietlenie dni tygodnia
         for (int i = 0; i < 7; i++) {
             Label dayNameLabel = new Label(dayNames[i]);
             dayNameLabel.getStyleClass().add("day-name-label");
@@ -118,8 +127,10 @@ public class CalendarController {
         LocalDate firstOfMonth = currentDate.withDayOfMonth(1);
         int dayOfWeekOfFirstOfMonth = firstOfMonth.getDayOfWeek().getValue();
 
+        // obliczenie odpowiedniego odstepu gdzie na siatce powinien sie zaczynac pierwszy dzien
         int offset = (dayOfWeekOfFirstOfMonth - 1 + 7) % 7;
 
+        // renderowanie boxow dni miesiaca
         for (int dayOfMonth = 1; dayOfMonth <= yearMonth.lengthOfMonth(); dayOfMonth++) {
             LocalDate date = yearMonth.atDay(dayOfMonth);
 

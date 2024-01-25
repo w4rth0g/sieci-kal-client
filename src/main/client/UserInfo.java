@@ -1,5 +1,6 @@
 package main.client;
 
+// klasa przechowujaca informacje o biezacym uzytkowniku
 public class UserInfo {
     public static String getToken() {
         return token;

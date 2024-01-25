@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+// component sluzcy renderowaniu boxow ni miesiaca
 public class DayBox extends VBox {
     private final Label dayLabel;
     private final Button addButton;
@@ -46,6 +47,7 @@ public class DayBox extends VBox {
         this.eventDotsContainer.setSpacing(1);
         eventDotsContainer.setAlignment(Pos.CENTER);
 
+        // dodanie punktow w boxie dla oznaczenia istnienia i ilosci wydarzen w danym dniu
         for (int i = 0; i < Math.min(eventCount, 2); i++) {
             Label dot = new Label("•");
             dot.getStyleClass().add("event-dot");
@@ -83,6 +85,7 @@ public class DayBox extends VBox {
         });
     }
 
+    // wyswietlenie okienka modal po kliknieciu w dany box
     private void showModal() {
         modalStage = new Stage();
         modalStage.initModality(Modality.APPLICATION_MODAL);
@@ -110,6 +113,7 @@ public class DayBox extends VBox {
         dateLabel.setAlignment(Pos.CENTER);
         modalLayout.setTop(dateLabel);
 
+        // wyswietlenie eventow w modalu na dany dzien
         VBox eventBoxes = new VBox(10);
         eventBoxes.setPadding(new Insets(20, 0, 20, 0));
         for (Event evt : this.eventsForDay) {
@@ -172,6 +176,7 @@ public class DayBox extends VBox {
 
         HBox bottomSection = new HBox();
 
+        // przyciski do dodawania nowego eventu i wychodzenia z okienka
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
@@ -186,6 +191,7 @@ public class DayBox extends VBox {
         return modalScene;
     }
 
+    // scena dla formularza dodawania eventa
     private VBox createEventForm() {
         Label infoLbl = new Label("Dodaj wydarzenie");
         infoLbl.setAlignment(Pos.CENTER);
@@ -221,6 +227,7 @@ public class DayBox extends VBox {
         return formLayout;
     }
 
+    // wysylanie zadania dodania eventa data to zawsze dzien boxa ktory zostal wybrany. mozemy dopasowac godzine
     private void handleSubmit(String title, String description, int startHour, int startMinute, int endHour, int endMinute) {
         try {
             String formattedTitle = title.replace(" ", "_");
@@ -242,6 +249,7 @@ public class DayBox extends VBox {
         }
     }
 
+    // zamykanie okna i aktualizacja widoku w celu zaciagniecia najnowszych zmian z bazy
     private void refreshEventsDisplay() {
         calendarController.updateCalendar();
         modalStage.close();
